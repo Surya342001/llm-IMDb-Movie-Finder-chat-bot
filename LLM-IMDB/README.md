@@ -1,133 +1,158 @@
-📌 🎥 IMDb Movie Finder (LLM + LangChain + FastAPI)
+📌 🎥 IMDb Movie Finder
+A natural language chatbot for querying movies using LangChain, vector search, and a local LLM (Gemma, LLaMA2) served via Ollama.
 
-🚀 Features:
-✅ Query movies using natural language
-✅ Supports year, genre, and actor filters
-✅ Uses LangChain + ChromaDB for semantic search
-✅ Conversational memory for follow-up questions
+This project provides a fully local solution for interacting with a movie database using natural language queries, leveraging the power of large language models and vector search for semantic retrieval.
+
+🚀 Features
+✅ Query movies using natural language: Ask questions about movies in a conversational style.
+
+✅ Filters by genre, year, actor, etc.: Refine your searches with specific criteria.
+
+✅ LangChain + ChromaDB for semantic retrieval: Intelligent search capabilities based on meaning, not just keywords.
+
+✅ Supports conversational history: The chatbot remembers previous interactions for a more fluid conversation.
+
+✅ Runs fully local: Utilizes Ollama with Gemma or LLaMA2, ensuring your data stays on your machine.
 
 🛠️ Setup Instructions
+Follow these steps to get the IMDb Movie Finder up and running on your local machine.
 
-1️⃣ Activate Conda Environment
-👉 You need the correct Python environment to run the backend.
+1️⃣ Activate Environment
+It's recommended to use a virtual environment to manage dependencies.
 
-🔹 Run this in your terminal (anywhere):
+Using venv:
+
+<------- Activate venv environment ----->
 
 python -m venv venv
-source venv/bin/activate 
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
+Or if using Conda:
 
+<------- Create and activate Conda environment ----->
 
+conda create -n llm-imdb-py311 python=3.11 -y
 conda activate llm-imdb-py311
 
-✅ Why: This ensures you're using Python 3.11 with all required packages for the backend.
+✅ This ensures you're using Python 3.11+ with correct dependencies.
 
-🔹 Verify Python version:
+2️⃣ Install Python Dependencies (Backend)
+Navigate into the backend directory and install the required libraries.
 
-python --version
+<------- Change directory to backend and install requirements ----->
 
-✅ Expected: Python 3.11.x
-
-2️⃣ Setup Backend (FastAPI)
-📂 Navigate to backend folder:
-
-cd /Users/surya.prakash1/Downloads/testing 2/LLM-IMDB/backend
-🔹 Install Python dependencies:
-
+cd LLM-IMDB/backend
 pip install -r requirements.txt
 
-✅ Why: Installs FastAPI, LangChain, OpenAI SDK, ChromaDB, etc.
+If you need a CPU-only PyTorch installation (e.g., if you don't have a compatible GPU):
 
-
-🔹 Build the Vector Store (important step):
-
-python vector_store.py
-
-⚠️ If PyTorch gives an error:
+<------- Install PyTorch CPU-only ----->
 
 pip install torch==2.2.2 --index-url https://download.pytorch.org/whl/cpu
-🔹 Start the backend server:
+
+3️⃣ Setup Vector Store (Run Once)
+This step builds and saves the vector database from the movies.csv file. This process converts movie data into embeddings for efficient semantic search.
+
+<------- Run IMDb data loader ----->
+
+python imdb_loader.py
+
+✅ This step converts movie data into embeddings using sentence-transformers.
+
+4️⃣ Set Up Ollama (Local LLM Server)
+Ollama is used to run the large language model locally.
+
+Install Ollama:
+
+macOS:
+
+<------- Install Ollama on macOS ----->
+
+brew install ollama
+
+Ubuntu:
+
+<------- Install Ollama on Ubuntu ----->
+
+curl -fsSL https://ollama.com/install.sh | sh
+
+Start the Ollama server (in a separate terminal and keep it running):
+
+<------- Start Ollama server ----->
+
+ollama serve
+
+If port 11434 is already in use, Ollama is likely already running.
+
+Pull a supported model (e.g., Gemma or LLaMA2). This will download the model to your machine:
+
+<------- Pull Gemma 2b model ----->
+
+ollama run gemma:2b
+
+or
+
+<------- Pull LLaMA2 model ----->
+
+ollama run llama2
+
+✅ This step downloads the local LLM that will be used for generating answers.
+
+5️⃣ Run the Backend (FastAPI + LangChain + Ollama)
+Start the FastAPI backend server. This will expose the chatbot via REST APIs.
+
+<------- Start backend server ----->
 
 uvicorn main:app --reload --port 8000
-✅ Why: Runs the FastAPI backend that processes movie queries.
 
-📌 Keep this terminal window open.
+By default, your backend will be running at: http://127.0.0.1:8000
 
-3️⃣ Setup Frontend (React)
-📂 Open a new terminal tab/window and navigate to frontend:
+✅ This serves the movie chatbot via REST APIs using a LangChain ConversationalRetrievalChain.
 
-cd /Users/surya.prakash1/Downloads/testing 2/LLM-IMDB/imdb-frontend
-🔹 Install Node.js dependencies:
+6️⃣ Start Frontend (React)
+In a new terminal, navigate to the frontend directory and start the React development server.
 
+<------- Change directory to frontend and install npm packages ----->
+
+cd LLM-IMDB/imdb-frontend
 npm install
-✅ Why: Installs React, Axios, and other frontend libraries.
 
-🔹 Start the React app:
+<------- Start React frontend development server ----->
 
 npm start
-✅ Why: Runs the web interface to interact with the backend.
 
-4️⃣ Test the App
-Open: http://localhost:3000 in your browser
-Try example queries:
-Show me some comedy movies
-Movies with Leonardo DiCaprio
-Best action thrillers with Keanu Reeves
-📌 Folder & Command Summary
+Visit: http://localhost:3000
 
-Activate Environment: (Anywhere)
-conda activate llm-imdb-py311
-Backend: (LLM-IMDB/backend)
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-Frontend: (LLM-IMDB/imdb-frontend)
-npm install
-npm start
-🔍 Why install these?
+✅ Example Queries
+Here are some example queries you can try with the chatbot:
 
-FastAPI → Backend server for API requests.
-LangChain → LLM orchestration for movie queries.
-OpenAI → Uses GPT model to understand questions.
-ChromaDB → Stores and retrieves movie embeddings.
-React → Frontend UI for user interaction.
+"Show me some comedy movies"
 
+"Movies with Leonardo DiCaprio"
 
+"Psychological thrillers with a twist ending"
 
+"Best action thrillers with Keanu Reeves"
 
+"Romantic dramas with Tom Hanks"
 
+"Movies released after 2015"
 
-# ✅ Example Queries You Can Type
-# These work without any code changes, assuming you're using basic similarity_search():
+✅ These queries are semantically matched using LangChain + ChromaDB.
 
-# 🎭 By Genre
-# "Show me some comedy movies"
+🧠 How to Switch LLM Models (Ollama)
+You can easily switch the Large Language Model used by the backend.
 
-# "Find thriller films"
+In query_processor.py, locate the following line:
 
-# "List top romantic movies"
+<------- ChatOllama model configuration ----->
 
-# 👤 By Actor / Star
-# "Movies with Leonardo DiCaprio"
+chat_model = ChatOllama(model="gemma:2b", temperature=0)
 
-# "Show films starring Natalie Portman"
+You can change "gemma:2b" to any other supported Ollama model. Some popular options include:
 
-# 🎬 By Director (if available in metadata — check your dataset)
-# "Movies directed by Christopher Nolan" (Only if director info is part of the text)
+"llama2"
 
-# 🧠 By Plot/Theme
-# "Time travel science fiction movies"
+"gemma:2b-it"
 
-# "Movies about survival in space"
-
-# "Psychological thrillers with a twist ending"
-
-# 🗓️ By Time/Year
-# "Movies released after 2015" (Only works well if year info is embedded in text — you can add it if not)
-
-# 🔁 Combination Filters
-# "Romantic dramas with Tom Hanks"
-
-# "Best action thrillers with Keanu Reeves"
-
-# "Underrated war movies"
-
+Or explore more models from the Ollama Librar
