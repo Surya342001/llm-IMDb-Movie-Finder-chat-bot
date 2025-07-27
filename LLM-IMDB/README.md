@@ -156,3 +156,4 @@ You can change "gemma:2b" to any other supported Ollama model. Some popular opti
 "gemma:2b-it"
 
 Or explore more models from the Ollama Librar
+![recommendation mp4 (online-video-cutter com)](https://github.com/user-attachments/assets/3404eaf2-6d7f-48cc-b723-a2ca615348f1)
