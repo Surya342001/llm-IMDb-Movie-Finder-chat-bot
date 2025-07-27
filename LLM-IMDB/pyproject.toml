@@ -1,0 +1,19 @@
+[project]
+name = "llm-imdb"
+version = "0.1.0"
+description = "LangChain-based IMDB Question Answering App"
+authors = [{ name = "Surya Prakash", email = "maheshwaransurya97@gmail.com" }]
+dependencies = [
+    "python-dotenv >=1.0.0",
+    "langchain >=0.1.0",
+    "openai >=1.0.0",
+    "chromadb >=0.4.0",
+    "pandas >=2.0.0",
+    "tqdm >=4.0.0",
+    "fastapi >=0.110.0",
+    "uvicorn >=0.27.0"
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
